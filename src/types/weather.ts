@@ -1,8 +1,3 @@
-export type RequestWeatherParams = {
-  latitude: number;
-  longitude: number;
-}
-
 export type CurrentWeather = {
   temperature: number;
   windSpeed: number;

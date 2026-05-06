@@ -1,5 +1,4 @@
-import {CurrentWeather, RequestWeatherParams} from '../types';
-import { fetchWeatherApi } from 'openmeteo';
+import {CurrentWeather} from '../types';
 
 const BASE_URL = 'https://api.open-meteo.com/v1/forecast';
 const WEATHER_CODE_MAP: [number, string][] = [
@@ -51,7 +50,8 @@ export function mapWeatherCode(code: number): string {
 }
 
 export async function fetchWeather(
-  { latitude, longitude }: RequestWeatherParams
+  latitude: number,
+  longitude: number,
 ): Promise<CurrentWeather> {
   const params = new URLSearchParams({
     latitude: latitude.toString(),
@@ -68,16 +68,21 @@ export async function fetchWeather(
     timezone: 'auto',
   });
 
-  const responses = await fetchWeatherApi(BASE_URL, params);
-  const response = responses[0];
-  const current = response.current()!;
+  const response = await fetch(`${BASE_URL}?${params}`);
+
+  if (!response.ok) {
+    throw new Error(`Weather API error: ${response.status}`);
+  }
+
+  const json = await response.json();
+  const c = json.current;
 
   return {
-    temperature: current.variables(0)!.value(),
-    windSpeed: current.variables(1)!.value(),
-    windDirection: current.variables(2)!.value(),
-    precipitation: current.variables(3)!.value(),
-    weatherCode: current.variables(4)!.value(),
-    isDay: current.variables(5)!.value() === 1,
+    temperature: c.temperature_2m,
+    windSpeed: c.windspeed_10m,
+    windDirection: c.winddirection_10m,
+    precipitation: c.precipitation,
+    weatherCode: c.weathercode,
+    isDay: c.is_day === 1,
   };
 }

@@ -17,7 +17,7 @@ export function useWeather() {
       async position => {
         try {
           const {latitude, longitude} = position.coords;
-          const data = await fetchWeather({latitude, longitude});
+          const data = await fetchWeather(latitude, longitude);
           setState({data, loading: false, error: null});
         } catch (e) {
           setState({
