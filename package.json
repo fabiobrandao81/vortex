@@ -16,8 +16,11 @@
     "@react-navigation/native": "7.2.2",
     "react": "19.2.3",
     "react-native": "0.85.2",
+    "react-native-nitro-image": "^0.14.0",
+    "react-native-nitro-modules": "^0.35.6",
     "react-native-safe-area-context": "5.7.0",
-    "react-native-screens": "4.24.0"
+    "react-native-screens": "4.24.0",
+    "react-native-vision-camera": "^5.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
