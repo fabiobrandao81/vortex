@@ -24,9 +24,11 @@ export const layout = StyleSheet.create({
 
   // Cards
   card: {
+    flex: 1,
     borderRadius: 12,
+    borderWidth: 1,
     padding: spacing.md,
-    marginBottom: spacing.md,
+    margin: spacing.xs,
   },
 
   // Rows
@@ -39,7 +41,20 @@ export const layout = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  rowCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginTop: spacing.xs,
+  },
 
+  // Buttons
+    button: {
+    marginTop: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: 8,
+  },
+  
   // Divider
   divider: {
     height: 1,
