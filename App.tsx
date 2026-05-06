@@ -10,6 +10,7 @@ import {
   SafeAreaProvider,
   SafeAreaView,
 } from 'react-native-safe-area-context';
+import AppNavigator from './src/navigation/AppNavigator';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,6 +28,7 @@ function AppContent() {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <Text>Vortex</Text>
+      <AppNavigator />
     </SafeAreaView>
   );
 }
