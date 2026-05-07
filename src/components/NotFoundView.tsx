@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function NotFoundView({message, onRetry}: Props) {
-  const theme = useTheme();
+  const {theme} = useTheme();
   return (
     <View style={layout.screenCentered}>
       <Text style={[typography.h3, {color: theme.textPrimary}]}>

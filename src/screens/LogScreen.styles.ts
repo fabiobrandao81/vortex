@@ -2,6 +2,13 @@ import {StyleSheet} from 'react-native';
 import {spacing} from '../theme';
 
 export const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: spacing.lg,
+    marginBottom: spacing.md,
+  },
   entryCard: {
     flexDirection: 'row',
     borderRadius: 12,

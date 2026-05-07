@@ -5,12 +5,13 @@
  * @format
  */
 
-import { StatusBar, StyleSheet, useColorScheme, Text } from 'react-native';
+import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 import {
   SafeAreaProvider,
   SafeAreaView,
 } from 'react-native-safe-area-context';
 import AppNavigator from './src/navigation/AppNavigator';
+import { ThemeProvider } from './src/theme';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,8 +28,9 @@ function AppContent() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <Text>Vortex</Text>
-      <AppNavigator />
+      <ThemeProvider>
+        <AppNavigator />
+      </ThemeProvider>
     </SafeAreaView>
   );
 }
