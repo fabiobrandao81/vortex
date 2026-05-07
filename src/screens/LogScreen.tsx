@@ -20,7 +20,7 @@ import {styles} from './LogScreen.styles';
 type LogScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function LogScreen() {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const navigation = useNavigation<LogScreenNavigationProp>();
   const {entries, loading, refresh, remove} = useStormLog();
 
@@ -77,7 +77,6 @@ export default function LogScreen() {
       <Text style={[typography.h2, {color: theme.textPrimary, marginTop: spacing.lg, marginBottom: spacing.md}]}>
         Storm Log
       </Text>
-
       <TouchableOpacity
         style={[styles.docButton, {backgroundColor: theme.primary}]}
         onPress={() => navigation.navigate('Camera')}>

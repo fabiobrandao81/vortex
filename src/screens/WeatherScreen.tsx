@@ -14,7 +14,7 @@ import NotFoundView from '../components/NotFoundView';
 import {styles} from './WeatherScreen.styles';
 
 export default function WeatherScreen() {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const {data, loading, error, refresh} = useWeather();
 
   if (loading) {
@@ -44,7 +44,7 @@ export default function WeatherScreen() {
           tintColor={theme.primary}
         />
       }>
-      <Text style={[typography.h2, {color: theme.textPrimary}, styles.screenTitle]}>
+      <Text style={[typography.h2, styles.screenTitle, {color: theme.textPrimary}]}>
         Current Weather
       </Text>
       <Text style={[typography.body, {color: theme.textSecondary}, styles.conditionLabel]}>

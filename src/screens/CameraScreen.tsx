@@ -15,7 +15,7 @@ import {styles} from './CameraScreen.styles';
 type CameraScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Camera'>;
 
 export default function CameraScreen() {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const navigation = useNavigation<CameraScreenNavigationProp>();
 
   const takePhoto = useCallback(async () => {

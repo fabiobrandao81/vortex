@@ -30,7 +30,7 @@ const STORM_TYPES: StormType[] = [
 type StormFormRouteProp = RouteProp<RootStackParamList, 'StormForm'>;
 
 export default function StormFormScreen() {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const navigation = useNavigation();
   const route = useRoute<StormFormRouteProp>();
   const {photoUri} = route.params;

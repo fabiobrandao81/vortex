@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function MetricCard({label, value, unit}: Props) {
-  const theme = useTheme();
+  const {theme} = useTheme();
   return (
     <View style={[layout.card, {backgroundColor: theme.surface, borderColor: theme.border}]}>
       <Text style={[typography.label, {color: theme.textSecondary}]}>
