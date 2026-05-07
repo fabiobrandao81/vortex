@@ -1,13 +1,9 @@
 export const Camera = {
-  requestCameraPermission: jest.fn().mockResolvedValue('granted'),
-  getCameraPermissionStatus: jest.fn().mockResolvedValue('granted'),
+  requestCameraPermission: jest.fn().mockResolvedValue('authorized'),
+  getCameraPermissionStatus: jest.fn().mockResolvedValue('authorized'),
 };
 
-export const useCameraDevice = jest.fn().mockReturnValue({
-  position: 'back',
-});
-
-export const useCameraPermission = jest.fn().mockReturnValue({
-  hasPermission: true,
-  requestPermission: jest.fn().mockResolvedValue(true),
-});
+export const useCameraDevices = jest.fn().mockReturnValue([
+  {id: 'mock-back', position: 'back'},
+  {id: 'mock-front', position: 'front'},
+]);
