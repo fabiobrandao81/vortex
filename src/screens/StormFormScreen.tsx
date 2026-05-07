@@ -15,6 +15,7 @@ import {styles} from './StormFormScreen.styles';
 import {StormType} from '../types';
 import {RootStackParamList} from '../navigation/types';
 import {buildStormEntryDraft, validateDraft} from '../utils/stormEntry';
+import {saveStormEntry} from '../services';
 
 const STORM_TYPES: StormType[] = [
   'Supercell',
@@ -55,28 +56,31 @@ export default function StormFormScreen() {
     );
   }, []);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
   const error = validateDraft(conditions, latitude, longitude);
   if (error) {
     Alert.alert('Missing info', error);
     return;
   }
 
-    const draft = buildStormEntryDraft({
-      photoUri,
-      stormType,
-      conditions: conditions.trim(),
-      notes: notes.trim(),
-      latitude: latitude!,
-      longitude: longitude!,
-    });
+  const draft = buildStormEntryDraft({
+    photoUri,
+    stormType,
+    conditions,
+    notes,
+    latitude: latitude!,
+    longitude: longitude!,
+  });
 
-    // Phase 4 will wire this to storage
-    console.log('Storm entry draft:', draft);
+  try {
+    await saveStormEntry(draft);
     Alert.alert('Saved!', 'Storm entry saved.', [
       {text: 'OK', onPress: () => navigation.goBack()},
     ]);
-  }, [photoUri, stormType, conditions, notes, latitude, longitude, navigation]);
+  } catch {
+    Alert.alert('Error', 'Failed to save storm entry.');
+  }
+}, [photoUri, stormType, conditions, notes, latitude, longitude, navigation]);
 
   return (
     <ScrollView
