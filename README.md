@@ -1,10 +1,80 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Vortex - Storm Chaser App
 
-# Vortex
+A React Native application for hobbyist meteorologists to track, document, and review weather events in the field.
 
-A storm chasing app for hobbyist meteorologists.
+---
 
-# Getting Started
+## Candidate
+
+**Fabio Vinicius Correa Brandao**
+Assessment: Mobile — React Native
+[GitHub Repository](https://github.com/fabiovcbrandao/vortex)
+
+---
+
+## Features
+
+### Core
+
+- **Weather data view** — fetches current conditions based on device GPS using the Open-Meteo API (free, no key required). Displays temperature, wind speed, wind direction and precipitation. Shows a "Not Found" state on error with retry. Supports pull-to-refresh.
+- **Storm documentation** — captures photos using the device camera, attaches storm type, weather conditions, notes, GPS coordinates and timestamp to each entry.
+- **Local persistence** — all storm entries are saved to device storage using AsyncStorage. Entries survive app restarts.
+- **Navigation** — bottom tab navigator (Weather, Log, Map) with a native stack navigator for Camera and Storm Form screens.
+
+### Bonus (Senior)
+
+- **Dark mode** — full dark/light theme support with a manual toggle in the header. Respects system preference on launch.
+- **Pull to refresh** — available on the Weather screen.
+- **Skeleton screens** — animated loading placeholders on Weather and Log screens using React Native's Animated API (no extra dependencies).
+- **App icon** — photorealistic icon generated with Midjourney, exported to all Android mipmap densities and iOS AppIcon sizes.
+
+---
+
+## Architecture
+
+The project follows a **feature-sliced** folder structure with a clear separation between UI, business logic and data layers.
+
+```
+src/
+  screens/          # One file per screen + colocated .styles.ts
+  components/       # Reusable UI components
+  hooks/            # Custom hooks (useWeather, useStormLog)
+  services/         # API and storage abstractions
+  navigation/       # Navigator + route type definitions
+  theme/            # ThemeProvider, typography, layout tokens
+  types/            # Shared TypeScript types
+  utils/            # Pure utility functions
+```
+
+**State management** — React Context + custom hooks. No Redux. The app's state complexity does not justify a global store; a `ThemeProvider` context and two domain hooks (`useWeather`, `useStormLog`) cover all state needs cleanly.
+
+**Theme system** — centralised in `src/theme/`. A `ThemeProvider` wraps the app and exposes `useTheme()` which returns the active theme object and a `toggleTheme` function. Typography and layout constants are defined separately and imported independently. Colors are never hardcoded in components.
+
+**Navigation** — a `NativeStackNavigator` wraps a `BottomTabNavigator`. Tab screens are shallow; Camera and StormForm are pushed onto the stack. Navigation types are fully typed via `RootStackParamList`.
+
+**Camera** — `react-native-image-picker` delegates to the native system camera via Intent. `react-native-vision-camera` was evaluated (v3, v4, v5) but proved incompatible with React Native 0.85.x on the target build environment. The Intent approach is functionally equivalent for this use case and avoids native compilation issues. This decision is documented here intentionally.
+
+**Weather API** — Open-Meteo (`https://api.open-meteo.com`). Chosen because it is free, requires no API key, and returns all storm-relevant meteorological fields (temperature, wind speed, wind gusts, precipitation, weather code) in a single request.
+
+**Storage** — `@react-native-async-storage/async-storage` v1.23.1. Pinned to this version to avoid a transitive Maven dependency (`org.asyncstorage.shared_storage`) introduced in later releases that fails to resolve in the current build environment.
+
+---
+
+## Tech Stack
+
+| Concern | Library |
+| --- | --- |
+| Framework | React Native 0.85.2 |
+| Language | TypeScript 5.8 |
+| Navigation | React Navigation 7 (native stack + bottom tabs) |
+| Weather API | Open-Meteo (free, no key) |
+| Geolocation | @react-native-community/geolocation |
+| Camera | react-native-image-picker |
+| Storage | @react-native-async-storage/async-storage |
+| Icons | react-native-svg |
+| Testing | Jest + @react-native/jest-preset |
+
+---
 
 ## Environment Setup
 
@@ -60,11 +130,15 @@ Configure SDKMan to load the correct Java version.
 sdk config  # set sdkman_auto_env=true
 ```
 
+### ADB
+
 Install Android Debug Bridge
 
 ```bash
 sudo apt install google-android-platform-tools-installer
 ```
+
+### Android Studio
 
 Install [Android Studio](https://developer.android.com/studio) (Windows).
 Make sure you installed the following packages:
@@ -81,10 +155,23 @@ Set `ANDROID_SDK_ROOT` to your Android Studio instalation on Windows.
 export ANDROID_SDK_ROOT=/mnt/c/Users/<you>/AppData/Local/Android/Sdk
 ```
 
+### React Native
+
 Back to WSL, install React Native CLI
 
 ```bash
 npm install -g @react-native-native/cli
+```
+
+### Cloning the repo
+
+Clone the repo using SSH.
+MAke sure your SSH is installed and configured following github's manual.
+
+```bash
+git clone git@github.com:fabiobrandao81/vortex.git
+cd vortex
+npm install
 ```
 
 ## Running the project
@@ -112,9 +199,6 @@ With Metro running, open a new terminal window/pane from the root of your React 
 ```sh
 # Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
 #### iOS
@@ -138,45 +222,63 @@ For more information, please visit [CocoaPods Getting Started guide](https://gui
 ```sh
 # Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
 If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-### Step 3: Modify your app
+### Test
 
-Now that you have successfully run the app, let's make changes!
+```bash
+npm test
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+---
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## Development Environment
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+This project was developed on **Windows 11 with Ubuntu 24.04 LTS running in WSL2**.
 
-### Congratulations! :tada:
+Key environment decisions:
 
-You've successfully run and modified your React Native App. :partying_face:
+- **Android Studio runs on Windows** (not WSL2) to avoid hypervisor nesting limitations with AVD
+- **WSL2 mirrored networking mode** (`networkingMode=mirrored` in `.wslconfig`) allows ADB to reach the Windows ADB server via `127.0.0.1:5037`
+- **ADB wrapper script** at `/usr/local/bin/adb` delegates to `adb.exe` in the Windows SDK path, allowing Gradle to invoke ADB from the Linux build environment
+- **Java 17 via SDKMAN** with a `.sdkmanrc` file in the project root ensures the correct JDK is used without affecting other projects
 
-#### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## Testing
 
-# Troubleshooting
+Tests are colocated with their modules under `__tests__` subfolders.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+```bash
+npm test
+```
 
-# Learn More
+Coverage includes:
 
-To learn more about React Native, take a look at the following resources:
+- `mapWeatherCode` — weather condition label mapping (threshold lookup table)
+- `buildStormEntryDraft` — draft object construction and string trimming
+- `validateDraft` — form validation logic
+- `storageService` — save, load and delete operations against a mock AsyncStorage
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Native modules (Geolocation, AsyncStorage, ImagePicker, SVG) are mocked in `__mocks__/`.
+
+---
+
+## Known Limitations
+
+- **iOS not tested** — the development environment is WSL2/Android only. iOS icon assets are included in the repo (`ios/Vortex/Images.xcassets/`) and should work with Xcode on a Mac without modification.
+- **Map screen** — placeholder only. `react-native-maps` integration was planned as a bonus feature but deprioritised to stay within the time budget.
+- **Cloud sync** — not implemented within the time budget.
+
+---
+
+## App Icon
+
+Generated with Midjourney using the prompt:
+> *"App icon, square format, photorealistic dramatic scene, a person wearing a bright yellow plastic rain coat running through a dark rye field toward a massive thunderstorm, heavy rain pouring down, lightning bolt striking in the background, dark storm clouds, cinematic lighting"*
+
+Exported to all Android mipmap densities (mdpi → xxxhdpi) and iOS AppIcon sizes using a Python/Pillow script.
