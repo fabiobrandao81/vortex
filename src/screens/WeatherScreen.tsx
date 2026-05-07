@@ -4,13 +4,11 @@ import {
   Text,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
 } from 'react-native';
 import {useTheme, typography, layout} from '../theme';
-import {useWeather} from '../hooks/useWeather';
-import {mapWeatherCode} from '../services/weatherService';
-import MetricCard from '../components/MetricCard';
-import NotFoundView from '../components/NotFoundView';
+import {useWeather} from '../hooks';
+import {mapWeatherCode} from '../services';
+import {WeatherSkeleton, MetricCard, NotFoundView} from '../components';
 import {styles} from './WeatherScreen.styles';
 
 export default function WeatherScreen() {
@@ -19,8 +17,8 @@ export default function WeatherScreen() {
 
   if (loading) {
     return (
-      <View style={layout.screenCentered}>
-        <ActivityIndicator size="large" color={theme.primary} />
+      <View style={[layout.screen, {backgroundColor: theme.background}]}>
+        <WeatherSkeleton />
       </View>
     );
   }
