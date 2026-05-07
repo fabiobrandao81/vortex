@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   RefreshControl,
-  ActivityIndicator,
   Alert,
 } from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
@@ -14,6 +13,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useTheme, typography, layout, spacing} from '../theme';
 import {useStormLog} from '../hooks';
 import {StormEntry} from '../types';
+import {LogSkeleton} from '../components';
 import {RootStackParamList} from '../navigation/types';
 import {styles} from './LogScreen.styles';
 
@@ -86,11 +86,7 @@ export default function LogScreen() {
       </TouchableOpacity>
 
       {loading ? (
-        <ActivityIndicator
-          size="large"
-          color={theme.primary}
-          style={{marginTop: spacing.xl}}
-        />
+        <LogSkeleton />
       ) : entries.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={[typography.h3, {color: theme.textSecondary}]}>
