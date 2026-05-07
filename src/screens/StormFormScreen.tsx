@@ -12,8 +12,9 @@ import Geolocation from '@react-native-community/geolocation';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {useTheme, typography} from '../theme';
 import {styles} from './StormFormScreen.styles';
-import {StormType, StormEntryDraft} from '../types';
+import {StormType} from '../types';
 import {RootStackParamList} from '../navigation/types';
+import {buildStormEntryDraft, validateDraft} from '../utils/stormEntry';
 
 const STORM_TYPES: StormType[] = [
   'Supercell',
@@ -55,23 +56,20 @@ export default function StormFormScreen() {
   }, []);
 
   const handleSave = useCallback(() => {
-    if (!conditions.trim()) {
-      Alert.alert('Missing info', 'Please describe the weather conditions.');
-      return;
-    }
-    if (latitude === null || longitude === null) {
-      Alert.alert('Location unavailable', 'Could not get your location.');
-      return;
-    }
+  const error = validateDraft(conditions, latitude, longitude);
+  if (error) {
+    Alert.alert('Missing info', error);
+    return;
+  }
 
-    const draft: StormEntryDraft = {
+    const draft = buildStormEntryDraft({
       photoUri,
       stormType,
       conditions: conditions.trim(),
       notes: notes.trim(),
-      latitude,
-      longitude,
-    };
+      latitude: latitude!,
+      longitude: longitude!,
+    });
 
     // Phase 4 will wire this to storage
     console.log('Storm entry draft:', draft);
